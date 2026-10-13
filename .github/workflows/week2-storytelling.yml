@@ -1,0 +1,49 @@
+name: Build Week 2 visualization storytelling report
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Week2-Advanced-Visualization-Storytelling/**'
+      - '.github/workflows/week2-storytelling.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Week 2 dependencies
+        run: python -m pip install --upgrade pip && pip install -r Week2-Advanced-Visualization-Storytelling/requirements.txt
+      - name: Generate visualizations, findings and Word reports from official UCI data
+        working-directory: Week2-Advanced-Visualization-Storytelling
+        run: python week2_storytelling.py
+      - name: Upload generated deliverables as a workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: week2-advanced-visualization-report
+          path: |
+            Week2-Advanced-Visualization-Storytelling/Week2_Advanced_Data_Visualization_Report.docx
+            Week2-Advanced-Visualization-Storytelling/Submission_Description.docx
+            Week2-Advanced-Visualization-Storytelling/visualizations/
+            Week2-Advanced-Visualization-Storytelling/outputs/
+          if-no-files-found: error
+      - name: Commit generated reports and figures
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Week2-Advanced-Visualization-Storytelling/Week2_Advanced_Data_Visualization_Report.docx Week2-Advanced-Visualization-Storytelling/Submission_Description.docx Week2-Advanced-Visualization-Storytelling/visualizations Week2-Advanced-Visualization-Storytelling/outputs
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+          else
+            git commit -m "Add Week 2 data storytelling report and visualizations"
+            git push
+          fi
