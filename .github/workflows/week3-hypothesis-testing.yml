@@ -1,0 +1,55 @@
+name: Build Week 3 Statistical Analysis Report
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Week3-Statistical-Analysis-Hypothesis-Testing/**'
+      - '.github/workflows/week3-hypothesis-testing.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: week3-statistical-analysis
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Week 3 dependencies
+        run: python -m pip install --upgrade pip && pip install -r Week3-Statistical-Analysis-Hypothesis-Testing/requirements.txt
+      - name: Run statistical tests and generate deliverables
+        working-directory: Week3-Statistical-Analysis-Hypothesis-Testing
+        run: python week3_hypothesis_testing.py
+      - name: Upload report, descriptions, figures and statistics
+        uses: actions/upload-artifact@v4
+        with:
+          name: week3-statistical-analysis-report
+          path: |
+            Week3-Statistical-Analysis-Hypothesis-Testing/Week3_Statistical_Analysis_Hypothesis_Testing_Report.docx
+            Week3-Statistical-Analysis-Hypothesis-Testing/Submission_Description.docx
+            Week3-Statistical-Analysis-Hypothesis-Testing/visualizations/
+            Week3-Statistical-Analysis-Hypothesis-Testing/outputs/
+          if-no-files-found: error
+      - name: Commit the generated analysis and Word reports
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Week3-Statistical-Analysis-Hypothesis-Testing/Week3_Statistical_Analysis_Hypothesis_Testing_Report.docx Week3-Statistical-Analysis-Hypothesis-Testing/Submission_Description.docx Week3-Statistical-Analysis-Hypothesis-Testing/visualizations Week3-Statistical-Analysis-Hypothesis-Testing/outputs
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+          else
+            git commit -m "Add Week 3 hypothesis testing results and report"
+            git pull --rebase origin main
+            git push
+          fi
