@@ -61,7 +61,7 @@ def acquire_data():
         if path.exists():
             df = pd.read_csv(path, sep=";")
             if len(df) > 0 and {"G1", "G2", "G3", "studytime", "absences"}.issubset(df.columns):
-                return df, f"Existing official UCI Mathematics CSV: {path.relative_to(ROOT) if path.is_relative_to(ROOT) else path}"
+                return df, "Existing official UCI Mathematics CSV from the Week 1 project"
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     request = urllib.request.Request(UCI_ZIP, headers={"User-Agent": "Week2-Student-EDA/1.0"})
     try:
@@ -303,7 +303,9 @@ def build_report(df, audit, metrics, paths, source):
     doc.add_paragraph(f"DOI: {DOI}. Acquisition: {source}. The report uses the official Mathematics course CSV (student-mat.csv), not the Portuguese-language course file.")
     doc.add_paragraph(f"Initial source file: {audit['rows_before']} records. Records after duplicate removal and validation: {audit['rows_after']}. Duplicate rows removed: {audit['duplicates_removed']}; invalid rows excluded from charts: {audit['invalid_rows_removed']}. Synthetic data used: No.")
     doc.add_paragraph("The pipeline checks required grade/study/absence fields, converts numeric columns safely, removes exact duplicate rows, and validates plausible ranges before visualizing. It does not impute final grades because that would invent outcome data. Any records excluded for missing required values or invalid ranges are counted in the run metadata/audit.")
+    doc.add_page_break()
     doc.add_heading("4. Visualization Design and Findings", 1)
+    doc.add_paragraph("Each figure is presented with its key finding and a rationale for the chosen visual form. The chart sequence moves from overall distribution to relationships, group comparisons, and a combined correlation summary.")
     captions = [
         ("Figure 1. Final-grade distribution", "The histogram shows the full grade range. The mean and 10/20 reference line give the reader two simple points of orientation before interpreting more detailed relationships.", f"Mean G3: {metrics['grade_mean']['G3']:.2f}; median: {metrics['grade_median']['G3']:.1f}; standard deviation: {metrics['grade_std']['G3']:.2f}. {metrics['pass_count']} students ({metrics['pass_rate_pct']:.1f}%) have G3 ≥ 10."),
         ("Figure 2. Grades across assessment periods", "Box plots are a compact way to compare medians, quartiles, variability, and potential extreme values. Red diamonds mark means, making central tendency easier to compare.", f"Mean G1: {metrics['grade_mean']['G1']:.2f}; mean G2: {metrics['grade_mean']['G2']:.2f}; mean G3: {metrics['grade_mean']['G3']:.2f}. Compare the distributions rather than assume every student's grade increased."),
@@ -313,7 +315,9 @@ def build_report(df, audit, metrics, paths, source):
         ("Figure 6. Pass-threshold rate by prior failures", "A bar chart converts the binary threshold outcome into percentages that are easy to compare. Sample sizes are included because failure groups may be unequal.", "Previous failures are an indicator of risk in these records, not a label for an individual student. Small groups can have unstable percentages."),
         ("Figure 7. Correlation heatmap", "A single heatmap summarizes the direction and magnitude of several pairwise linear relationships, making the strong grade-history pattern visible at a glance.", f"G2–G3 correlation: {metrics['g2_g3_corr']:.2f}; absences–G3 correlation: {metrics['absences_g3_corr']:.2f}; failures–G3 correlation: {metrics['failures_g3_corr']:.2f}. Correlation is not causation."),
     ]
-    for path, (title, rationale, finding) in zip(paths, captions):
+    for figure_index, (path, (title, rationale, finding)) in enumerate(zip(paths, captions)):
+        if figure_index > 0:
+            doc.add_page_break()
         doc.add_heading(title, 2)
         doc.add_picture(str(path), width=Inches(5.9))
         doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
