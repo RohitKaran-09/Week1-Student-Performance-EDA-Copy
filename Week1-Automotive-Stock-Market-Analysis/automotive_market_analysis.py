@@ -381,8 +381,11 @@ def build_report(prices,daily,drawdowns,metrics,returns,paths,source_info):
       ("Figure 7. Latest One-Year Relative Trend","Provides more recent context for the sector-vs-market relationship; it remains backward-looking and should be connected to valuation and fundamentals.")
     ]
     for i,(img,(title,note)) in enumerate(zip(paths,chart_notes)):
-      if i in (0,2,4,6): doc.add_page_break()
-      doc.add_heading(title,2);doc.add_picture(str(img),width=Inches(5.9));doc.paragraphs[-1].alignment=WD_ALIGN_PARAGRAPH.CENTER;doc.add_paragraph(note)
+      heading_para=doc.add_heading(title,2)
+      heading_para.paragraph_format.keep_with_next=True
+      doc.add_picture(str(img),width=Inches(5.9));doc.paragraphs[-1].alignment=WD_ALIGN_PARAGRAPH.CENTER
+      note_para=doc.add_paragraph(note)
+      note_para.paragraph_format.keep_together=True
     doc.add_heading("7. Key Trends and What Could Move Stocks",1)
     for head,body in [
       ("Demand rebound vs normalization","Monthly growth can look unusually strong after a weak comparison period or tax/policy change. Analysts should compare multi-month trends, wholesales and retail registrations, inventory, booking conversion and management guidance."),
@@ -419,7 +422,9 @@ def build_report(prices,daily,drawdowns,metrics,returns,paths,source_info):
     doc.add_heading("11. References and Public Sources",1)
     for idx,title,url,note in SOURCES:
       doc.add_paragraph(f"[{idx}] {title}. {note} URL: {url}")
-    doc.add_paragraph(f"Market data run metadata: {json.dumps(source_info,ensure_ascii=False)}")
+    doc.add_paragraph(f"Market-data retrieval timestamp: {source_info['generated_at_local']}. Requested window: {source_info['download_period_requested']}; observed date range: {source_info['observed_start']} to {source_info['observed_end']}.")
+    doc.add_paragraph(f"Usable source histories: {len(source_info['tickers_available'])}. No synthetic market prices were used. Detailed ticker coverage, row counts and generated chart names are preserved in outputs/run_metadata.json.")
+
     doc.save(REPORT_PATH)
 
 def main():
