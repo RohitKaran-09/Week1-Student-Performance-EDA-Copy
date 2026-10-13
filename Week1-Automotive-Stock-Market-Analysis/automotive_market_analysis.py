@@ -88,19 +88,30 @@ def download_market_data():
     for ticker in TICKERS:
         df = pd.DataFrame()
         try:
-            if isinstance(raw.columns, pd.MultiIndex) and ticker in raw.columns.get_level_values(0):
-                df = raw[ticker].copy()
-            elif not isinstance(raw.columns, pd.MultiIndex) and len(TICKERS) == 1:
+            if isinstance(raw.columns, pd.MultiIndex):
+                if ticker in raw.columns.get_level_values(0):
+                    df = raw[ticker].copy()
+                elif ticker in raw.columns.get_level_values(1):
+                    df = raw.xs(ticker, axis=1, level=1).copy()
+            else:
                 df = raw.copy()
-        except Exception:
-            pass
+        except Exception as exc:
+            warnings.warn(f"Could not read bundled columns for {ticker}: {exc}")
         if df.empty or "Close" not in df.columns or df["Close"].dropna().empty:
             try:
-                ind = yf.download(ticker, period=START_PERIOD, interval="1d",
-                                  auto_adjust=False, progress=False, threads=False, timeout=45)
+                ind = yf.Ticker(ticker).history(period=START_PERIOD, interval="1d", auto_adjust=False, actions=False)
+                if ind.empty:
+                    ind = yf.download(ticker, period=START_PERIOD, interval="1d",
+                                      auto_adjust=False, progress=False, threads=False, timeout=45)
                 if isinstance(ind.columns, pd.MultiIndex):
-                    # Recent yfinance versions may still return a two-level index.
-                    ind.columns = ind.columns.get_level_values(0)
+                    if ticker in ind.columns.get_level_values(0):
+                        ind = ind[ticker].copy()
+                    elif ticker in ind.columns.get_level_values(1):
+                        ind = ind.xs(ticker, axis=1, level=1).copy()
+                    elif "Close" in ind.columns.get_level_values(0):
+                        ind.columns = ind.columns.get_level_values(0)
+                    elif "Close" in ind.columns.get_level_values(1):
+                        ind.columns = ind.columns.get_level_values(1)
                 df = ind.copy()
             except Exception as exc:
                 warnings.warn(f"Could not retrieve {ticker}: {exc}")
