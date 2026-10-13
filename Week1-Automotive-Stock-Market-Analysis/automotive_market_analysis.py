@@ -196,7 +196,7 @@ def make_charts(prices, daily, drawdowns, metrics, period_returns):
     if len(norm):
         norm = norm.div(norm.bfill().iloc[0]).mul(100)
         for c in norm: ax.plot(norm.index, norm[c], label=c, linewidth=2)
-    ax.set(title="1. Five-Year Indexed Trend: Auto Sector vs Broad Market", ylabel="Indexed level (first common value = 100)", xlabel="Date")
+    ax.set(title="1. Five-Year Indexed Trend: Auto Sample Basket vs Broad Market", ylabel="Indexed level (first common value = 100)", xlabel="Date")
     ax.legend()
     fig.text(.01,.005,"Caption: Index levels are rebased to 100 to compare relative price movement, not absolute index values. The final series end on the latest available observations.",fontsize=8)
     fig.tight_layout(rect=[0,.06,1,1]); p=CHARTS/"01_sector_vs_broad_market.png";fig.savefig(p,dpi=170);plt.close(fig);paths.append(p)
@@ -339,7 +339,7 @@ def build_report(prices,daily,drawdowns,metrics,returns,paths,source_info):
     )
     doc.add_heading("Key Conclusions at a Glance",2)
     for text in [
-      f"Benchmark check: Nifty Auto 1Y return {pct(one_y_auto)} compared with Nifty 50 {pct(one_y_nifty)}; the gap matters when deciding whether a stock's return is sector-specific or market-wide.",
+      f"Benchmark check: Auto sample basket 1Y return {pct(one_y_auto)} compared with Nifty 50 {pct(one_y_nifty)}; the gap helps distinguish the selected sample's performance from the broad market.",
       f"Cross-section: {best_name} was the strongest and {worst_name} the weakest included share over the observed one-year window; rank alone does not establish value or future performance.",
       "Demand: SIAM's August 2026 release reported 439,309 passenger vehicles, 93,764 three-wheelers and 2,034,698 two-wheelers sold domestically in the covered categories, with a lower-base caveat [S1].",
       "Profitability: growth must translate into margins, cash flow and return on capital; volume growth alone is not enough.",
@@ -347,7 +347,7 @@ def build_report(prices,daily,drawdowns,metrics,returns,paths,source_info):
     ]: doc.add_paragraph(text,style="List Bullet")
 
     doc.add_heading("1. Objective and Scope",1)
-    doc.add_paragraph("The task is to analyze public information about India's automotive stock market, identify trends and industry factors, visualize evidence, and explain how those factors can influence listed auto companies. The scope covers the Nifty Auto index, the broad Nifty 50 comparator, passenger vehicles, two- and three-wheelers, commercial vehicles, selected component suppliers and batteries. The company sample is deliberately representative rather than an exhaustive stock universe; it is not a recommendation list.")
+    doc.add_paragraph("The task is to analyze public information about India's automotive stock market, identify trends and industry factors, visualize evidence, and explain how those factors can influence listed auto companies. The research reviews Nifty Auto as the official sector-index reference and Nifty 50 as the broad-market benchmark. For five-year historical comparison, the report uses an equal-weighted basket of the included listed auto shares because Yahoo's ^CNXAUTO feed supplied only one usable observation. The sample covers passenger vehicles, two- and three-wheelers, commercial vehicles, selected component suppliers and batteries and is not an exhaustive stock universe or a recommendation list.")
     doc.add_paragraph("Companies in the downloaded sample include Maruti Suzuki, Mahindra & Mahindra, Bajaj Auto, Eicher Motors, Hero MotoCorp, TVS Motor, Ashok Leyland, Bharat Forge, Bosch and Exide Industries, subject to market-data availability. Each business has different exposure to vehicle segments, exports, premiumization, fleet demand, commodity input costs and technology transition.")
     doc.add_heading("2. Data Sources and Methodology",1)
     doc.add_paragraph(f"Price-source method: yfinance retrieval from Yahoo Finance's public historical market-data interface. The script queried a five-year daily window on {generated}; source tickers, first/last observations and valid row counts are recorded in outputs/run_metadata.json and outputs/historical_prices.csv. Indexes use supplied close levels, while equity returns use adjusted close when available, falling back to close where not. That treatment aims to account for stock splits and distributions, but it does not make stock returns and index levels perfectly identical concepts.")
@@ -375,9 +375,9 @@ def build_report(prices,daily,drawdowns,metrics,returns,paths,source_info):
       ("Figure 1. Five-Year Indexed Trend: Auto Sector vs Broad Market","Rebases the two benchmark lines to a common starting value so relative direction and compounding can be compared. It does not compare nominal index levels."),
       ("Figure 2. Individual Auto Stocks: One-Year vs Available Five-Year Return","Shows dispersion across listed companies. The cross-section supports avoiding one-size-fits-all sector conclusions; history lengths and corporate actions may differ."),
       ("Figure 3. Observed Return vs Annualized Volatility","Maps return against realized risk. A high return/high volatility point is not automatically better than a lower-risk outcome, and past return is not expected return."),
-      ("Figure 4. Benchmark Drawdowns","Shows how far the Nifty Auto and Nifty 50 moved below prior peaks. Drawdowns help communicate the lived path of risk, which a single return number hides."),
+      ("Figure 4. Benchmark Drawdowns","Shows how far the equal-weighted auto-stock sample basket and Nifty 50 moved below prior peaks. Drawdowns help communicate the lived path of risk, which a single return number hides."),
       ("Figure 5. Daily-Return Correlation","Shows which stocks tended to co-move over the overlapping daily window. Correlation can change in stress periods and does not itself make a diversified portfolio."),
-      ("Figure 6. Nifty Auto Monthly Return Heatmap","Highlights calendar periods of positive and negative sector returns without assuming that a seasonality pattern will repeat."),
+      ("Figure 6. Auto Sample Basket Monthly Return Heatmap","Highlights calendar periods of positive and negative returns in the selected auto-stock basket without assuming that a seasonality pattern will repeat."),
       ("Figure 7. Latest One-Year Relative Trend","Provides more recent context for the sector-vs-market relationship; it remains backward-looking and should be connected to valuation and fundamentals.")
     ]
     for i,(img,(title,note)) in enumerate(zip(paths,chart_notes)):
@@ -443,7 +443,7 @@ def main():
     print(f"Downloaded {len(prices.columns)} usable market series from {prices.index.min().date()} to {prices.index.max().date()}.")
     print("Synthetic data used: False")
     print("Benchmark returns:")
-    print(metrics.loc[[x for x in ["Nifty Auto","Nifty 50"] if x in metrics.index],["1Y return","3Y return","5Y return","Annualized daily volatility","Maximum drawdown"]].to_string())
+    print(metrics.loc[[x for x in ["Auto sample basket","Nifty 50"] if x in metrics.index],["1Y return","3Y return","5Y return","Annualized daily volatility","Maximum drawdown"]].to_string())
     print(f"Charts created: {len(paths)}")
     print(f"Report created: {REPORT_PATH}")
 
