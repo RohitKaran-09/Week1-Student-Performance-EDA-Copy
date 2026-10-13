@@ -1,0 +1,17 @@
+{
+  "rows_before": 395,
+  "duplicates_removed": 0,
+  "missing_required_cells_before_drop": 0,
+  "rows_dropped_for_missing_required_fields": 0,
+  "invalid_values_by_field": {
+    "G1": 0,
+    "G2": 0,
+    "G3": 0,
+    "studytime": 0,
+    "failures": 0,
+    "absences": 0
+  },
+  "invalid_rows_removed": 0,
+  "rows_after": 395,
+  "synthetic_fallback_used": false
+}

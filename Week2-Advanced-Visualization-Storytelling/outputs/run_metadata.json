@@ -1,0 +1,19 @@
+{
+  "dataset": "UCI Student Performance \u2014 Mathematics",
+  "source": "Existing official UCI Mathematics CSV: /home/runner/work/Week1-Student-Performance-EDA-Copy/Week1-Student-Performance-EDA-Copy/data/student-mat.csv",
+  "source_url": "https://archive.ics.uci.edu/static/public/320/student+performance.zip",
+  "dataset_page": "https://archive.ics.uci.edu/dataset/320/student%2Bperformance",
+  "doi": "https://doi.org/10.24432/C5TG7T",
+  "n_records_analyzed": 395,
+  "synthetic_fallback_used": false,
+  "report": "Week2_Advanced_Data_Visualization_Report.docx",
+  "visualizations": [
+    "01_final_grade_distribution.png",
+    "02_grade_progression.png",
+    "03_g2_vs_g3_relationship.png",
+    "04_studytime_group_comparison.png",
+    "05_absences_grade_density.png",
+    "06_pass_rate_by_failures.png",
+    "07_correlation_heatmap.png"
+  ]
+}
