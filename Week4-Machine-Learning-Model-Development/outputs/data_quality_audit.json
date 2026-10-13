@@ -1,0 +1,17 @@
+{
+  "source_rows": 395,
+  "duplicate_rows_removed": 0,
+  "missing_final_grades_before_filter": 0,
+  "rows_removed_for_missing_final_grade": 0,
+  "invalid_final_grade_values_removed": 0,
+  "rows_after_preparation": 395,
+  "target_definition": "1 if G3 >= 10; otherwise 0",
+  "predictor_exclusions": [
+    "G1",
+    "G2",
+    "G3",
+    "target_pass"
+  ],
+  "synthetic_fallback_used": false,
+  "note": "Rows with a missing target or invalid final grade are excluded. Predictor imputation is fitted inside training-fold pipelines."
+}

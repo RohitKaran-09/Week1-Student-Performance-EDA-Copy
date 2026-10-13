@@ -1,0 +1,24 @@
+{
+  "dataset": "UCI Student Performance \u2014 Mathematics",
+  "source": "Existing official UCI Mathematics CSV from the Week 1 project",
+  "source_url": "https://archive.ics.uci.edu/static/public/320/student+performance.zip",
+  "dataset_page": "https://archive.ics.uci.edu/dataset/320/student%2Bperformance",
+  "doi": "https://doi.org/10.24432/C5TG7T",
+  "records_after_preparation": 395,
+  "synthetic_fallback_used": false,
+  "target": "1 if G3 >= 10; otherwise 0",
+  "excluded_features_to_reduce_leakage": [
+    "G1",
+    "G2",
+    "G3"
+  ],
+  "selected_model": "Logistic regression",
+  "visualizations": [
+    "01_cross_validation_model_comparison.png",
+    "02_test_confusion_matrix.png",
+    "03_test_roc_curve.png",
+    "04_test_performance_metrics.png",
+    "05_permutation_feature_importance.png"
+  ],
+  "report": "Week4_Machine_Learning_Model_Development_Report.docx"
+}

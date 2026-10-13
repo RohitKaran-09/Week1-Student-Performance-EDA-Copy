@@ -1,0 +1,166 @@
+{
+  "selected_model": "Logistic regression",
+  "selection_metric": "Mean 5-fold stratified training cross-validation ROC-AUC",
+  "test_size_fraction": 0.2,
+  "random_state": 42,
+  "test_count": 79,
+  "train_count": 316,
+  "positive_class_name": "G3 >= 10",
+  "negative_class_name": "G3 < 10",
+  "positive_class_rate_all_pct": 67.08860759493672,
+  "test_accuracy": 0.5949367088607594,
+  "test_balanced_accuracy": 0.5609579100145138,
+  "test_precision": 0.7142857142857143,
+  "test_recall": 0.660377358490566,
+  "test_f1": 0.6862745098039216,
+  "test_roc_auc": 0.5950653120464442,
+  "confusion_matrix_labels": [
+    "G3 < 10",
+    "G3 >= 10"
+  ],
+  "confusion_matrix": [
+    [
+      12,
+      14
+    ],
+    [
+      18,
+      35
+    ]
+  ],
+  "classification_report": {
+    "Below 10": {
+      "precision": 0.4,
+      "recall": 0.46153846153846156,
+      "f1-score": 0.42857142857142855,
+      "support": 26.0
+    },
+    "At or above 10": {
+      "precision": 0.7142857142857143,
+      "recall": 0.660377358490566,
+      "f1-score": 0.6862745098039216,
+      "support": 53.0
+    },
+    "accuracy": 0.5949367088607594,
+    "macro avg": {
+      "precision": 0.5571428571428572,
+      "recall": 0.5609579100145138,
+      "f1-score": 0.5574229691876751,
+      "support": 79.0
+    },
+    "weighted avg": {
+      "precision": 0.6108499095840868,
+      "recall": 0.5949367088607594,
+      "f1-score": 0.6014608374995568,
+      "support": 79.0
+    }
+  },
+  "class_balance_all": {
+    "0": 130,
+    "1": 265
+  },
+  "cv_results": [
+    {
+      "model": "Logistic regression",
+      "cv_roc_auc_mean": 0.689092970521542,
+      "cv_roc_auc_std": 0.058444033107948004,
+      "cv_f1_mean": 0.7555500215556046,
+      "cv_balanced_accuracy_mean": 0.6615669988925803
+    },
+    {
+      "model": "Random forest",
+      "cv_roc_auc_mean": 0.6871470758846174,
+      "cv_roc_auc_std": 0.09954448461658831,
+      "cv_f1_mean": 0.7757334962963692,
+      "cv_balanced_accuracy_mean": 0.6413621262458472
+    },
+    {
+      "model": "Decision tree",
+      "cv_roc_auc_mean": 0.6404954384854717,
+      "cv_roc_auc_std": 0.04423857881794894,
+      "cv_f1_mean": 0.750159815417155,
+      "cv_balanced_accuracy_mean": 0.6192912513842745
+    },
+    {
+      "model": "Dummy baseline",
+      "cv_roc_auc_mean": 0.5,
+      "cv_roc_auc_std": 0.0,
+      "cv_f1_mean": 0.8030118144947981,
+      "cv_balanced_accuracy_mean": 0.5
+    }
+  ],
+  "numeric_predictors": [
+    "age",
+    "Medu",
+    "Fedu",
+    "traveltime",
+    "studytime",
+    "failures",
+    "famrel",
+    "freetime",
+    "goout",
+    "Dalc",
+    "Walc",
+    "health",
+    "absences"
+  ],
+  "categorical_predictors": [
+    "school",
+    "sex",
+    "address",
+    "famsize",
+    "Pstatus",
+    "Mjob",
+    "Fjob",
+    "reason",
+    "guardian",
+    "schoolsup",
+    "famsup",
+    "paid",
+    "activities",
+    "nursery",
+    "higher",
+    "internet",
+    "romantic"
+  ],
+  "n_students_total": 395,
+  "source_features": [
+    "school",
+    "sex",
+    "age",
+    "address",
+    "famsize",
+    "Pstatus",
+    "Medu",
+    "Fedu",
+    "Mjob",
+    "Fjob",
+    "reason",
+    "guardian",
+    "traveltime",
+    "studytime",
+    "failures",
+    "schoolsup",
+    "famsup",
+    "paid",
+    "activities",
+    "nursery",
+    "higher",
+    "internet",
+    "romantic",
+    "famrel",
+    "freetime",
+    "goout",
+    "Dalc",
+    "Walc",
+    "health",
+    "absences"
+  ],
+  "excluded_grade_features": [
+    "G1",
+    "G2",
+    "G3"
+  ],
+  "model_selection_cv_auc_mean": 0.689092970521542,
+  "selected_cv_roc_auc_mean": 0.689092970521542
+}
