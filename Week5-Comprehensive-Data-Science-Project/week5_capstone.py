@@ -425,17 +425,17 @@ def build_report(df,audit,st,ml,cv_table,importance,images,source):
     doc.add_heading("9. Reproducibility and Deliverables",1)
     doc.add_paragraph("Run python week5_capstone.py after installing requirements.txt. The script writes the capstone DOCX, a separate Word version of the submission description, integrated visualizations, cleaned data, source/run metadata, statistical test results, model cross-validation comparisons, held-out metrics, confusion-matrix values, and permutation importance output. The short excerpts below highlight target/leakage control, model-selection cross-validation, and the primary hypothesis test; the full implementation is in week5_capstone.py.")
     doc.add_heading("Illustrative code excerpts",2)
-    doc.add_paragraph("Target construction and leakage control:")
+    p=doc.add_paragraph("Target construction and leakage control:"); p.paragraph_format.keep_with_next=True
     p=doc.add_paragraph()
     p.paragraph_format.left_indent=Inches(.2)
     r=p.add_run('df["target_pass"] = (df["G3"] >= 10).astype(int)\nX = df.drop(columns=["G1", "G2", "G3", "target_pass"])')
     r.font.name="Consolas"; r.font.size=Pt(8)
-    doc.add_paragraph("Training-only cross-validation for model selection:")
+    p=doc.add_paragraph("Training-only cross-validation for model selection:"); p.paragraph_format.keep_with_next=True
     p=doc.add_paragraph()
     p.paragraph_format.left_indent=Inches(.2)
     r=p.add_run('cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\nscores = cross_validate(model, X_train, y_train, cv=cv, scoring="roc_auc")')
     r.font.name="Consolas"; r.font.size=Pt(8)
-    doc.add_paragraph("Primary hypothesis test:")
+    p=doc.add_paragraph("Primary hypothesis test:"); p.paragraph_format.keep_with_next=True
     p=doc.add_paragraph()
     p.paragraph_format.left_indent=Inches(.2)
     r=p.add_run('test = stats.ttest_ind(no_failures, prior_failures,\n                         equal_var=False, alternative="greater")')
