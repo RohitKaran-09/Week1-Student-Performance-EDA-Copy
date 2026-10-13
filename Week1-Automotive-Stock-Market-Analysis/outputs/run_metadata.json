@@ -1,0 +1,96 @@
+{
+  "generated_at_local": "2026-10-13T18:47:17+00:00",
+  "data_source": "Yahoo Finance via yfinance public historical interface",
+  "download_period_requested": "5y",
+  "observed_start": "2021-10-13",
+  "observed_end": "2026-10-12",
+  "tickers_available": {
+    "^NSEI": {
+      "name": "Nifty 50",
+      "category": "Broad-market index",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1234
+    },
+    "MARUTI.NS": {
+      "name": "Maruti Suzuki",
+      "category": "Passenger vehicles",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1235
+    },
+    "M&M.NS": {
+      "name": "Mahindra & Mahindra",
+      "category": "SUVs, LCVs and tractors",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1235
+    },
+    "BAJAJ-AUTO.NS": {
+      "name": "Bajaj Auto",
+      "category": "Two/three-wheelers and exports",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1235
+    },
+    "EICHERMOT.NS": {
+      "name": "Eicher Motors",
+      "category": "Motorcycles and commercial vehicles",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1235
+    },
+    "HEROMOTOCO.NS": {
+      "name": "Hero MotoCorp",
+      "category": "Two-wheelers",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1235
+    },
+    "TVSMOTOR.NS": {
+      "name": "TVS Motor",
+      "category": "Two/three-wheelers",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1235
+    },
+    "ASHOKLEY.NS": {
+      "name": "Ashok Leyland",
+      "category": "Commercial vehicles",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1235
+    },
+    "BHARATFORG.NS": {
+      "name": "Bharat Forge",
+      "category": "Auto components and industrial forging",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1234
+    },
+    "BOSCHLTD.NS": {
+      "name": "Bosch",
+      "category": "Automotive technology and components",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1235
+    },
+    "EXIDEIND.NS": {
+      "name": "Exide Industries",
+      "category": "Batteries",
+      "first_observation": "2021-10-13",
+      "last_observation": "2026-10-12",
+      "n_observations": 1235
+    }
+  },
+  "synthetic_data_used": false,
+  "charts_generated": [
+    "01_sector_vs_broad_market.png",
+    "02_company_relative_returns.png",
+    "03_risk_return_map.png",
+    "04_benchmark_drawdowns.png",
+    "05_daily_return_correlation.png",
+    "06_sector_monthly_return_heatmap.png",
+    "07_recent_relative_trend.png"
+  ]
+}

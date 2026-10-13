@@ -1,0 +1,56 @@
+[
+  {
+    "id": "S1",
+    "title": "Society of Indian Automobile Manufacturers (SIAM), Auto Industry Performance of August 2026, 15 September 2026",
+    "url": "https://www.siam.in/pressrelease-details.aspx?mpgid=53&pgidtrail=50&pid=620",
+    "note": "SIAM reports August 2026 production of 3,157,822 units across covered categories; domestic sales included 439,309 passenger vehicles, 93,764 three-wheelers and 2,034,698 two-wheelers. It reports year-on-year growth of 36.5%, 22.8% and 10.5%, respectively, and cautions that the prior-year base was lower."
+  },
+  {
+    "id": "S2",
+    "title": "Press Information Bureau / Ministry of Heavy Industries, GST rates for automobiles, 4 September 2025",
+    "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2163763&lang=2&reg=48",
+    "note": "The government describes GST reductions across vehicle categories and auto parts, aimed at supporting affordability and downstream component demand."
+  },
+  {
+    "id": "S3",
+    "title": "Press Information Bureau / Ministry of Road Transport and Highways, Road Transport and Auto Sector Get a Big Push Through GST Rationalisation, 12 September 2025",
+    "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2165916&lang=2&reg=48",
+    "note": "Official notice reports measures for two-wheelers, cars, tractors, buses, commercial vehicles and auto components."
+  },
+  {
+    "id": "S4",
+    "title": "PM E-DRIVE, Scheme Notifications",
+    "url": "https://pmedrive.heavyindustries.gov.in/policy_document",
+    "note": "Official notifications include August 2026 enhancement/extension for e-two-wheelers, September 2026 amendments for e-trucks and e-buses, and other scheme updates."
+  },
+  {
+    "id": "S5",
+    "title": "Mahindra & Mahindra, Results Q4 F26 and FY26, 5 May 2026",
+    "url": "https://www.mahindra.com/news-room/press-release/en/m-and-m-results-q4-f26-and-fy26",
+    "note": "M&M reported FY26 consolidated revenue of Rs 198,639 crore (+25%) and consolidated PAT of Rs 17,099 crore; its release reports FY26 auto volumes up 19% and UV volumes up 20%. Figures are company-reported and definitions in the release should be consulted."
+  },
+  {
+    "id": "S6",
+    "title": "Reuters, Hyundai Motor Group bets $15.5 billion on India as global auto hub, 13 October 2026",
+    "url": "https://www.reuters.com/world/asia-pacific/hyundai-motor-group-invest-155-billion-india-through-2032-2026-10-13/",
+    "note": "Reuters reports Hyundai Motor Group's announced $15.5 billion India investment through 2032, including R&D and capacity-related investment, underscoring competition and localization."
+  },
+  {
+    "id": "S7",
+    "title": "Reuters, Indian firms seen posting faster profit growth despite global headwinds, 8 October 2026",
+    "url": "https://www.reuters.com/world/india/indian-firms-seen-posting-faster-profit-growth-despite-global-headwinds-2026-10-08/",
+    "note": "Reuters summarizes brokerage expectations of stronger September-quarter earnings growth but also notes demand uncertainties and possible commodity-cost pressure. This is a forecast summary, not a confirmed earnings result."
+  },
+  {
+    "id": "S8",
+    "title": "Reuters, India steel ministry unlikely to seek new curbs on cheap imports, 7 October 2026",
+    "url": "https://www.reuters.com/world/china/india-steel-ministry-unlikely-seek-new-curbs-on-cheap-imports-2026-10-07/",
+    "note": "Reuters discusses steel import and pricing conditions as a potential input-cost and margin factor for steel consumers, including automotive manufacturers."
+  },
+  {
+    "id": "S9",
+    "title": "Yahoo Finance public historical market data interface (accessed at run time)",
+    "url": "https://finance.yahoo.com/",
+    "note": "Historical price data are retrieved programmatically via yfinance. Availability, corporate actions, index symbol conventions and adjustments depend on the source. The script records the actual download window and latest observation."
+  }
+]
