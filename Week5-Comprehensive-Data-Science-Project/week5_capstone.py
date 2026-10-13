@@ -392,8 +392,6 @@ def build_report(df,audit,st,ml,cv_table,importance,images,source):
       ("Figure 9. Permutation importance","Describes which input variables the selected model relies on; this is not causal importance.")
     ]
     for idx,(img,(title,why)) in enumerate(zip(images,descriptions)):
-        if idx in (0,2,4,6,8):
-            doc.add_page_break()
         doc.add_heading(title,2)
         doc.add_picture(str(img),width=Inches(5.75))
         doc.paragraphs[-1].alignment=WD_ALIGN_PARAGRAPH.CENTER
