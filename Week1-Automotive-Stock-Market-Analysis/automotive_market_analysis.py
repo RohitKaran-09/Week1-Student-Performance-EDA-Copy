@@ -75,6 +75,9 @@ SOURCES = [
     ("S9", "Yahoo Finance public historical market data interface (accessed at run time)",
      "https://finance.yahoo.com/",
      "Historical price data are retrieved programmatically via yfinance. Availability, corporate actions, index symbol conventions and adjustments depend on the source. The script records the actual download window and latest observation."),
+    ("S10", "Nifty Indices, Nifty Auto index overview and methodology",
+     "https://www.niftyindices.com/indices/equity/sectoral-indices/nifty-auto",
+     "Nifty Auto is an Indian automotive-sector index calculated using free-float market capitalization. This report does not calculate historical official-index returns because Yahoo returned only one usable observation for its ^CNXAUTO symbol in this run; instead it uses a clearly labeled equally weighted basket of the included stock sample."),
 ]
 
 def download_market_data():
@@ -231,12 +234,12 @@ def make_charts(prices, daily, drawdowns, metrics, period_returns):
     fig.text(.01,.005,"Caption: Drawdown is the percentage decline from the previous running maximum. It shows historical downside paths, not maximum possible future losses.",fontsize=8)
     fig.tight_layout(rect=[0,.06,1,1]);p=CHARTS/"04_benchmark_drawdowns.png";fig.savefig(p,dpi=170);plt.close(fig);paths.append(p)
     # 5 correlation heatmap
-    cols=[c for c in daily.columns if daily[c].notna().sum()>=100]
+    cols=[c for c in daily.columns if c != "Auto sample basket" and daily[c].notna().sum()>=100]
     corr=daily[cols].corr(min_periods=80)
     fig,ax=plt.subplots(figsize=(10,8))
     sns.heatmap(corr,annot=True,fmt=".2f",vmin=-1,vmax=1,center=0,cmap="vlag",square=True,linewidths=.3,ax=ax)
-    ax.set(title="5. Daily-Return Correlation Across the Sector and Benchmarks")
-    fig.text(.01,.005,"Caption: Pairwise correlations use overlapping daily returns when at least 80 observations are available. Correlation describes co-movement and does not establish a common cause.",fontsize=8)
+    ax.set(title="5. Daily-Return Correlation Across Auto Stocks and Nifty 50")
+    fig.text(.01,.005,"Caption: Pairwise correlations use overlapping daily returns when at least 80 observations are available. The computed equal-weighted sample basket is excluded here to avoid mechanical correlations with its own constituents. Correlation describes co-movement and does not establish a common cause.",fontsize=8)
     fig.tight_layout(rect=[0,.04,1,1]);p=CHARTS/"05_daily_return_correlation.png";fig.savefig(p,dpi=160);plt.close(fig);paths.append(p)
     # 6 monthly returns of Nifty auto
     sector=prices.get("Auto sample basket")
@@ -248,7 +251,7 @@ def make_charts(prices, daily, drawdowns, metrics, period_returns):
         pivot=pivot.reindex(columns=month_order)
         fig,ax=plt.subplots(figsize=(10,5.4))
         sns.heatmap(pivot,annot=True,fmt=".0%",center=0,cmap="vlag",mask=pivot.isna(),ax=ax)
-        ax.set(title="6. Nifty Auto Monthly Returns by Calendar Month",xlabel="Month",ylabel="Year")
+        ax.set(title="6. Auto Sample Basket Monthly Returns by Calendar Month",xlabel="Month",ylabel="Year")
         fig.text(.01,.005,"Caption: Monthly returns are calculated from month-end index closes. Empty cells indicate no observation or no monthly return in the partial period.",fontsize=8)
         fig.tight_layout(rect=[0,.06,1,1]);p=CHARTS/"06_sector_monthly_return_heatmap.png";fig.savefig(p,dpi=160);plt.close(fig);paths.append(p)
     # Save a direct recent trend chart
@@ -318,12 +321,12 @@ def build_report(prices,daily,drawdowns,metrics,returns,paths,source_info):
     nifty=metrics.loc["Nifty 50"] if "Nifty 50" in metrics.index else metrics.iloc[1]
     one_y_auto=sector.get("1Y return",np.nan);one_y_nifty=nifty.get("1Y return",np.nan)
     five_y_auto=sector.get("5Y return",np.nan);five_y_nifty=nifty.get("5Y return",np.nan)
-    best_col=metrics.loc[[x for x in metrics.index if x not in ["Nifty Auto","Nifty 50"]],"1Y return"].dropna()
+    best_col=metrics.loc[[x for x in metrics.index if x not in ["Nifty Auto","Nifty 50","Auto sample basket"]],"1Y return"].dropna()
     best_name=best_col.idxmax() if len(best_col) else "Not available"
     worst_name=best_col.idxmin() if len(best_col) else "Not available"
     best_val=best_col.max() if len(best_col) else np.nan
     worst_val=best_col.min() if len(best_col) else np.nan
-    count_equities=sum(1 for x in metrics.index if x not in ["Nifty Auto","Nifty 50"])
+    count_equities=sum(1 for x in metrics.index if x not in ["Nifty Auto","Nifty 50","Auto sample basket"])
     doc.add_heading("Executive Summary",1)
     doc.add_paragraph(
       f"This report reviews the Indian automotive equity sector using daily historical price data downloaded on {generated}. "
