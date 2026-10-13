@@ -52,5 +52,11 @@
     "title": "Yahoo Finance public historical market data interface (accessed at run time)",
     "url": "https://finance.yahoo.com/",
     "note": "Historical price data are retrieved programmatically via yfinance. Availability, corporate actions, index symbol conventions and adjustments depend on the source. The script records the actual download window and latest observation."
+  },
+  {
+    "id": "S10",
+    "title": "Nifty Indices, Nifty Auto index overview and methodology",
+    "url": "https://www.niftyindices.com/indices/equity/sectoral-indices/nifty-auto",
+    "note": "Nifty Auto is an Indian automotive-sector index calculated using free-float market capitalization. This report does not calculate historical official-index returns because Yahoo returned only one usable observation for its ^CNXAUTO symbol in this run; instead it uses a clearly labeled equally weighted basket of the included stock sample."
   }
 ]
