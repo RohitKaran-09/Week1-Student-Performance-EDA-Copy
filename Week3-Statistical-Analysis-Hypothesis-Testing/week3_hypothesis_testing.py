@@ -428,6 +428,7 @@ def build_report(df, audit, res, images, source):
     doc.add_heading("4.5 Exploratory: Kruskal–Wallis across study-time categories", 2)
     kw = res["exploratory_kruskal_wallis_studytime"]
     doc.add_paragraph(f"Kruskal–Wallis compares grade ranks across the four study-time categories: H({kw['degrees_freedom']}) = {kw['h_statistic']:.3f}, p = {kw['p_value']:.5g}. This result is exploratory; no unplanned pairwise post-hoc claims are made.")
+    doc.add_page_break()
     doc.add_heading("5. Visualizations and Interpretation", 1)
     captions = [
         ("Figure 1. Final grade distributions by previous-failure history", "The violin plot shows the shape and spread of grades in the two groups, complementing the mean-based primary test.", f"No-failure mean: {g0['mean']:.2f}; prior-failure mean: {g1['mean']:.2f}."),
@@ -438,8 +439,6 @@ def build_report(df, audit, res, images, source):
         ("Figure 6. Evidence across statistical tests", "The negative log base 10 of p-value gives a compact view of statistical evidence; it does not measure practical importance. Effect size and confidence interval remain essential.", f"Primary Welch test p = {ph['p_value_one_sided']:.5g}; Hedges' g = {ph['hedges_g']:.2f}."),
     ]
     for idx, (img, (title, rationale, finding)) in enumerate(zip(images, captions)):
-        if idx in (0, 2, 4):
-            doc.add_page_break()
         doc.add_heading(title, 2)
         doc.add_picture(str(img), width=Inches(5.9))
         doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
