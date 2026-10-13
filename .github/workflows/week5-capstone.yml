@@ -10,7 +10,7 @@ on:
 
 concurrency:
   group: week5-data-science-capstone
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -41,15 +41,27 @@ jobs:
             Week5-Comprehensive-Data-Science-Project/visualizations/
             Week5-Comprehensive-Data-Science-Project/outputs/
           if-no-files-found: error
-      - name: Commit capstone report, visualizations and outputs
+      - name: Publish generated files against the latest main branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Save this run's generated files outside the checkout before syncing
+          mkdir -p /tmp/week5-generated/visualizations /tmp/week5-generated/outputs
+          cp Week5-Comprehensive-Data-Science-Project/Week5_Comprehensive_Data_Science_Capstone_Report.docx /tmp/week5-generated/
+          cp Week5-Comprehensive-Data-Science-Project/Submission_Description.docx /tmp/week5-generated/
+          cp -a Week5-Comprehensive-Data-Science-Project/visualizations/. /tmp/week5-generated/visualizations/
+          cp -a Week5-Comprehensive-Data-Science-Project/outputs/. /tmp/week5-generated/outputs/
+          # Sync to the newest repository head so generated binaries do not conflict with another workflow run
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/week5-generated/Week5_Comprehensive_Data_Science_Capstone_Report.docx Week5-Comprehensive-Data-Science-Project/
+          cp /tmp/week5-generated/Submission_Description.docx Week5-Comprehensive-Data-Science-Project/
+          cp -a /tmp/week5-generated/visualizations/. Week5-Comprehensive-Data-Science-Project/visualizations/
+          cp -a /tmp/week5-generated/outputs/. Week5-Comprehensive-Data-Science-Project/outputs/
           git add Week5-Comprehensive-Data-Science-Project/Week5_Comprehensive_Data_Science_Capstone_Report.docx Week5-Comprehensive-Data-Science-Project/Submission_Description.docx Week5-Comprehensive-Data-Science-Project/visualizations Week5-Comprehensive-Data-Science-Project/outputs
           if git diff --cached --quiet; then
-            echo "No generated changes to commit."
+            echo "Generated files already match main."
           else
-            git commit -m "Add Week 5 comprehensive data science capstone report"
-            git pull --rebase origin main
-            git push
+            git commit -m "Publish final Week 5 comprehensive data science capstone"
+            git push origin HEAD:main
           fi
