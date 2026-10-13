@@ -209,7 +209,7 @@ def evaluate_models(X_train, y_train, X_test, y_test):
         "train_count": int(len(y_train)),
         "positive_class_name": f"G3 >= {PASS_MARK}",
         "negative_class_name": f"G3 < {PASS_MARK}",
-        "positive_class_rate_all_pct": float(y_train.shape[0] / (len(y_train) + len(y_test)) * 0 + 100 * (y_train.sum() + y_test.sum()) / (len(y_train) + len(y_test))),
+        "positive_class_rate_all_pct": float(100 * (y_train.sum() + y_test.sum()) / (len(y_train) + len(y_test))),
         "test_accuracy": float(accuracy_score(y_test, pred)),
         "test_balanced_accuracy": float(balanced_accuracy_score(y_test, pred)),
         "test_precision": float(precision_score(y_test, pred, zero_division=0)),
@@ -352,7 +352,7 @@ def build_report(df, audit, cv_table, metrics, images, source):
         f"Four candidate models were compared by stratified five-fold cross-validation on the training split. "
         f"The selected model was {metrics['selected_model']}, with mean cross-validation ROC-AUC {metrics['selected_cv_roc_auc_mean']:.3f}. "
         f"On the held-out test set, accuracy was {metrics['test_accuracy']:.3f}, balanced accuracy {metrics['test_balanced_accuracy']:.3f}, "
-        f"F1 {metrics['test_f1']:.3f}, and ROC-AUC {metrics['test_roc_auc']:.3f}. These metrics are educational evidence, not a validated high-stakes prediction system."
+        f"F1 {metrics['test_f1']:.3f}, and ROC-AUC {metrics['test_roc_auc']:.3f}. The test ROC-AUC is only modestly above chance, so the model has limited discrimination on this held-out sample. These metrics are educational evidence, not a validated high-stakes prediction system."
     )
     doc.add_heading("2. Problem Definition and Target", 1)
     doc.add_paragraph("Objective: demonstrate the end-to-end classification workflow, compare simple algorithms fairly, and discuss the strengths and limits of model evaluation.")
@@ -396,6 +396,7 @@ def build_report(df, audit, cv_table, metrics, images, source):
         cells = metric_table.add_row().cells
         add_cell(cells[0], name); add_cell(cells[1], f"{value:.3f}")
     doc.add_paragraph("Accuracy is the share of all test cases classified correctly. Precision describes the fraction of predicted-positive cases that are actual positives. Recall describes the fraction of actual-positive cases found. F1 combines precision and recall. Balanced accuracy averages sensitivity across the two classes; ROC-AUC measures ranking across classification thresholds. No metric alone is sufficient.")
+    doc.add_page_break()
     doc.add_heading("6. Visualizations and Interpretation", 1)
     chart_notes = [
         ("Figure 1. Cross-validation model comparison", "Compares candidate models by training-only cross-validation ROC-AUC; error bars show fold-to-fold standard deviation. The highest mean score is used for model selection."),
@@ -404,7 +405,9 @@ def build_report(df, audit, cv_table, metrics, images, source):
         ("Figure 4. Test performance metrics", "Presents complementary metrics on the same 0–1 scale; gaps between precision and recall can reveal different kinds of model error."),
         ("Figure 5. Permutation feature importance", "Measures how much test ROC-AUC changes when one input feature is shuffled. This is a model-dependence diagnostic, not a causal effect; correlated features and small samples can make rankings unstable.")
     ]
-    for img, (title, note) in zip(images, chart_notes):
+    for chart_index, (img, (title, note)) in enumerate(zip(images, chart_notes)):
+        if chart_index > 0:
+            doc.add_page_break()
         doc.add_heading(title, 2)
         doc.add_picture(str(img), width=Inches(5.8))
         doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
