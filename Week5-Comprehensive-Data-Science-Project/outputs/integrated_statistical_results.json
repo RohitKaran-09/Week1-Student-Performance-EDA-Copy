@@ -1,0 +1,124 @@
+{
+  "primary_test": {
+    "question": "Do students with no prior class failures have higher mean G3 than students with one or more prior failures?",
+    "h0": "mu_no_failure <= mu_prior_failure",
+    "h1": "mu_no_failure > mu_prior_failure",
+    "alpha": 0.05,
+    "method": "One-sided Welch independent-samples t-test",
+    "n_no_prior_failures": 312,
+    "mean_no_prior_failures": 11.253205128205128,
+    "sd_no_prior_failures": 4.169633291328349,
+    "n_one_or_more_failures": 83,
+    "mean_one_or_more_failures": 7.265060240963855,
+    "sd_one_or_more_failures": 4.711388220019807,
+    "mean_difference": 3.9881448872412726,
+    "standard_error": 0.5684714090906501,
+    "t_statistic": 7.015559311278065,
+    "degrees_freedom": 118.37658171019172,
+    "p_value_one_sided": 7.656692963842125e-11,
+    "ci95_two_sided": [
+      2.862453828479209,
+      5.113835946003336
+    ],
+    "hedges_g": 0.9282246064292026,
+    "decision": "Reject H0 at alpha=0.05"
+  },
+  "sensitivity_mann_whitney": {
+    "u_statistic": 19359.5,
+    "p_value_one_sided": 1.6510986203137972e-12
+  },
+  "secondary_chi_square": {
+    "observed": [
+      [
+        78,
+        234
+      ],
+      [
+        52,
+        31
+      ]
+    ],
+    "expected": [
+      [
+        102.68354430379746,
+        209.31645569620252
+      ],
+      [
+        27.31645569620253,
+        55.68354430379747
+      ]
+    ],
+    "chi_square": 42.09053193907707,
+    "df": 1,
+    "p_value": 8.714409608894218e-11,
+    "cramers_v": 0.32643270165000965,
+    "interpretation": "Evidence of association at alpha=0.05"
+  },
+  "exploratory_kruskal_wallis": {
+    "h_statistic": 7.578856181381842,
+    "df": 3,
+    "p_value": 0.055566544434365706,
+    "interpretation": "Insufficient evidence of different distributions at alpha=0.05"
+  },
+  "group_rates": {
+    "No prior failures": {
+      "n": 312,
+      "pass_n": 234,
+      "pass_rate_pct": 75.0,
+      "mean_g3": 11.253205128205128
+    },
+    "One or more prior failures": {
+      "n": 83,
+      "pass_n": 31,
+      "pass_rate_pct": 37.34939759036144,
+      "mean_g3": 7.265060240963855
+    }
+  },
+  "studytime_groups": {
+    "1": {
+      "n": 105,
+      "mean": 10.047619047619047,
+      "median": 10.0,
+      "sd": 4.95631095826506
+    },
+    "2": {
+      "n": 198,
+      "mean": 10.171717171717171,
+      "median": 11.0,
+      "sd": 4.217537482591475
+    },
+    "3": {
+      "n": 65,
+      "mean": 11.4,
+      "median": 12.0,
+      "sd": 4.639504283864818
+    },
+    "4": {
+      "n": 27,
+      "mean": 11.25925925925926,
+      "median": 12.0,
+      "sd": 5.281262906894325
+    }
+  },
+  "descriptive": {
+    "n": 395,
+    "mean_g1": 10.90886075949367,
+    "mean_g2": 10.713924050632912,
+    "mean_g3": 10.415189873417722,
+    "median_g3": 11.0,
+    "std_g3": 4.5814426109978434,
+    "pass_count": 265,
+    "below_count": 130,
+    "pass_rate_pct": 67.08860759493672,
+    "g2_g3_corr": 0.904867989269301,
+    "absences_g3_corr": 0.03424731615006931,
+    "failures_g3_corr": -0.3604149404616497,
+    "min_g3": 0.0,
+    "max_g3": 20.0
+  },
+  "limitations": [
+    "Observational associations do not prove causation.",
+    "The dataset represents two Portuguese secondary schools.",
+    "The G3 >= 10 threshold is a descriptive analytical convention, not a universal school policy."
+  ]
+}

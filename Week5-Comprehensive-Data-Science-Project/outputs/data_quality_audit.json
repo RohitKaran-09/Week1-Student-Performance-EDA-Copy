@@ -1,0 +1,21 @@
+{
+  "source_rows": 395,
+  "source_columns": 33,
+  "synthetic_fallback_used": false,
+  "duplicate_rows_found": 0,
+  "missing_cells_after_type_conversion": 0,
+  "missing_cells_in_required_fields": 0,
+  "rows_removed_for_missing_required_fields": 0,
+  "invalid_values_by_field": {
+    "G1": 0,
+    "G2": 0,
+    "G3": 0,
+    "studytime": 0,
+    "failures": 0,
+    "absences": 0
+  },
+  "rows_removed_for_invalid_ranges": 0,
+  "rows_after_cleaning": 395,
+  "columns_after_cleaning": 34,
+  "cleaning_summary": "Exact duplicates removed; text fields trimmed; numeric fields converted; required analysis fields checked for missing values; grades and key scales range-checked. Target values were not imputed."
+}

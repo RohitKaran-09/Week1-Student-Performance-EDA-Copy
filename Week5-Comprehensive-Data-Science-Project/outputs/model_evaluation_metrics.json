@@ -1,0 +1,126 @@
+{
+  "selected_model": "Logistic Regression",
+  "selection_method": "Highest mean stratified 5-fold CV ROC-AUC on training data",
+  "random_state": 42,
+  "test_size_fraction": 0.2,
+  "n_total": 395,
+  "n_train": 316,
+  "n_test": 79,
+  "positive_rate_pct": 67.08860759493672,
+  "test_accuracy": 0.5949367088607594,
+  "test_balanced_accuracy": 0.5609579100145138,
+  "test_precision": 0.7142857142857143,
+  "test_recall": 0.660377358490566,
+  "test_f1": 0.6862745098039216,
+  "test_roc_auc": 0.5950653120464442,
+  "confusion_matrix": [
+    [
+      12,
+      14
+    ],
+    [
+      18,
+      35
+    ]
+  ],
+  "confusion_matrix_order": [
+    "G3 < 10",
+    "G3 >= 10"
+  ],
+  "class_report": {
+    "Below threshold": {
+      "precision": 0.4,
+      "recall": 0.46153846153846156,
+      "f1-score": 0.42857142857142855,
+      "support": 26.0
+    },
+    "At/above threshold": {
+      "precision": 0.7142857142857143,
+      "recall": 0.660377358490566,
+      "f1-score": 0.6862745098039216,
+      "support": 53.0
+    },
+    "accuracy": 0.5949367088607594,
+    "macro avg": {
+      "precision": 0.5571428571428572,
+      "recall": 0.5609579100145138,
+      "f1-score": 0.5574229691876751,
+      "support": 79.0
+    },
+    "weighted avg": {
+      "precision": 0.6108499095840868,
+      "recall": 0.5949367088607594,
+      "f1-score": 0.6014608374995568,
+      "support": 79.0
+    }
+  },
+  "cv_results": [
+    {
+      "model": "Logistic Regression",
+      "cv_auc_mean": 0.689092970521542,
+      "cv_auc_sd": 0.058444033107948004,
+      "cv_f1_mean": 0.7555500215556046,
+      "cv_balanced_accuracy_mean": 0.6615669988925803
+    },
+    {
+      "model": "Random Forest",
+      "cv_auc_mean": 0.6871470758846174,
+      "cv_auc_sd": 0.09954448461658831,
+      "cv_f1_mean": 0.7757334962963692,
+      "cv_balanced_accuracy_mean": 0.6413621262458472
+    },
+    {
+      "model": "Decision Tree",
+      "cv_auc_mean": 0.6404954384854717,
+      "cv_auc_sd": 0.04423857881794894,
+      "cv_f1_mean": 0.750159815417155,
+      "cv_balanced_accuracy_mean": 0.6192912513842745
+    },
+    {
+      "model": "Dummy baseline",
+      "cv_auc_mean": 0.5,
+      "cv_auc_sd": 0.0,
+      "cv_f1_mean": 0.8030118144947981,
+      "cv_balanced_accuracy_mean": 0.5
+    }
+  ],
+  "predictor_columns": [
+    "school",
+    "sex",
+    "age",
+    "address",
+    "famsize",
+    "Pstatus",
+    "Medu",
+    "Fedu",
+    "Mjob",
+    "Fjob",
+    "reason",
+    "guardian",
+    "traveltime",
+    "studytime",
+    "failures",
+    "schoolsup",
+    "famsup",
+    "paid",
+    "activities",
+    "nursery",
+    "higher",
+    "internet",
+    "romantic",
+    "famrel",
+    "freetime",
+    "goout",
+    "Dalc",
+    "Walc",
+    "health",
+    "absences"
+  ],
+  "excluded_grade_columns": [
+    "G1",
+    "G2",
+    "G3"
+  ],
+  "feature_importance_note": "Permutation importance is predictive association, not causation.",
+  "selected_cv_roc_auc_mean": 0.689092970521542
+}

@@ -1,0 +1,22 @@
+{
+  "dataset": "UCI Student Performance \u2014 Mathematics",
+  "source": "Official UCI Mathematics CSV already present in the Week 1 repository",
+  "source_url": "https://archive.ics.uci.edu/static/public/320/student+performance.zip",
+  "dataset_page": "https://archive.ics.uci.edu/dataset/320/student%2Bperformance",
+  "doi": "https://doi.org/10.24432/C5TG7T",
+  "n_records": 395,
+  "synthetic_fallback_used": false,
+  "report": "Week5_Comprehensive_Data_Science_Capstone_Report.docx",
+  "n_visualizations": 9,
+  "visualizations": [
+    "01_final_grade_distribution.png",
+    "02_grade_progression.png",
+    "03_mean_grade_by_failure_group.png",
+    "04_correlation_heatmap.png",
+    "05_threshold_rate_by_failure_group.png",
+    "06_cross_validation_model_comparison.png",
+    "07_test_confusion_matrix.png",
+    "08_test_roc_curve.png",
+    "09_permutation_feature_importance.png"
+  ]
+}
