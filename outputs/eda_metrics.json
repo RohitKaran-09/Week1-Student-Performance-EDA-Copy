@@ -1,0 +1,35 @@
+{
+  "n_students": 395,
+  "n_columns": 33,
+  "g3_mean": 10.415189873417722,
+  "g3_median": 11.0,
+  "g3_std": 4.5814426109978434,
+  "g3_min": 0.0,
+  "g3_max": 20.0,
+  "pass_count": 265,
+  "pass_rate_pct": 67.08860759493672,
+  "below_count": 130,
+  "absences_g3_corr": 0.03424731615006931,
+  "g1_g3_corr": 0.8014679320174145,
+  "g2_g3_corr": 0.904867989269301,
+  "best_studytime": 3,
+  "best_studytime_mean": 11.4,
+  "studytime_groups": {
+    "1": {
+      "mean": 10.047619047619047,
+      "count": 105
+    },
+    "2": {
+      "mean": 10.171717171717171,
+      "count": 198
+    },
+    "3": {
+      "mean": 11.4,
+      "count": 65
+    },
+    "4": {
+      "mean": 11.25925925925926,
+      "count": 27
+    }
+  }
+}

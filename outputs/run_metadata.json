@@ -1,0 +1,11 @@
+{
+  "dataset": "UCI Student Performance \u2014 Mathematics",
+  "source": "Downloaded from official UCI ZIP archive: https://archive.ics.uci.edu/static/public/320/student+performance.zip",
+  "source_url": "https://archive.ics.uci.edu/static/public/320/student+performance.zip",
+  "dataset_page": "https://archive.ics.uci.edu/dataset/320/student%2Bperformance",
+  "doi": "https://doi.org/10.24432/C5TG7T",
+  "raw_file": "data/student-mat.csv",
+  "raw_rows": 395,
+  "clean_rows": 395,
+  "synthetic_fallback_used": false
+}
