@@ -423,7 +423,7 @@ def build_report(df,audit,st,ml,cv_table,importance,images,source):
     doc.add_heading("8. Conclusion",1)
     doc.add_paragraph("Across Weeks 1–4, the project demonstrates a complete workflow from acquisition and cleaning through EDA, statistical inference, and model evaluation. The most reliable insight is the strong observed association between prior-failure history and final-grade outcomes; the predictive model using non-grade variables is much less compelling. The responsible next step is supportive academic review and improved data collection, followed by independent model validation—not automated decisions about students.")
     doc.add_heading("9. Reproducibility and Deliverables",1)
-    doc.add_paragraph("Run python week5_capstone.py after installing requirements.txt. The script writes the capstone DOCX, a separate Word version of the submission description, integrated visualizations, cleaned data, source/run metadata, statistical test results, model cross-validation comparisons, held-out metrics, confusion-matrix values, and permutation importance output.")
+    doc.add_paragraph("Run python week5_capstone.py after installing requirements.txt. The script writes the capstone DOCX, a separate Word version of the submission description, integrated visualizations, cleaned data, source/run metadata, statistical test results, model cross-validation comparisons, held-out metrics, confusion-matrix values, and permutation importance output. The short excerpts below highlight target/leakage control, model-selection cross-validation, and the primary hypothesis test; the full implementation is in week5_capstone.py.")
     doc.add_heading("Illustrative code excerpts",2)
     doc.add_paragraph("Target construction and leakage control:")
     p=doc.add_paragraph()
@@ -440,7 +440,7 @@ def build_report(df,audit,st,ml,cv_table,importance,images,source):
     p.paragraph_format.left_indent=Inches(.2)
     r=p.add_run('test = stats.ttest_ind(no_failures, prior_failures,\n                         equal_var=False, alternative="greater")')
     r.font.name="Consolas"; r.font.size=Pt(8)
-    doc.add_paragraph("The excerpts illustrate the main analytical decisions; the full reproducible implementation is available in week5_capstone.py.")
+
     doc.add_heading("10. References",1)
     doc.add_paragraph("Cortez, P. (2008). Student Performance [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5TG7T")
     doc.add_paragraph("Cortez, P., & Silva, A. M. G. (2008). Using data mining to predict secondary school student performance. Proceedings of the 5th Annual Future Business Technology Conference.")
