@@ -84,7 +84,10 @@ def download_market_data():
     raw = yf.download(list(TICKERS), period=START_PERIOD, interval="1d",
                       auto_adjust=False, group_by="ticker", progress=False,
                       threads=True, timeout=45)
+    print("Raw Yahoo download shape:", getattr(raw, "shape", None))
+    print("Raw Yahoo column sample:", repr(list(raw.columns)[:12]) if hasattr(raw, "columns") else "no columns")
     frames = {}
+    diagnostics = {}
     for ticker in TICKERS:
         df = pd.DataFrame()
         try:
@@ -115,6 +118,7 @@ def download_market_data():
                 df = ind.copy()
             except Exception as exc:
                 warnings.warn(f"Could not retrieve {ticker}: {exc}")
+        diagnostics[ticker] = {"shape": list(df.shape), "columns": [str(c) for c in list(df.columns)[:10]], "has_close": "Close" in df.columns}
         if not df.empty:
             df.index = pd.to_datetime(df.index).tz_localize(None)
             df = df[~df.index.duplicated(keep="last")].sort_index()
@@ -128,7 +132,7 @@ def download_market_data():
                 if len(chosen) >= 100:
                     frames[ticker] = chosen.rename(TICKERS[ticker][0])
     if "^CNXAUTO" not in frames or "^NSEI" not in frames:
-        raise RuntimeError("Core index data could not be downloaded (Nifty Auto or Nifty 50). No synthetic prices were used.")
+        raise RuntimeError("Core index data could not be downloaded (Nifty Auto or Nifty 50). Diagnostics: " + json.dumps(diagnostics, default=str) + ". No synthetic prices were used.")
     if len(frames) < 6:
         raise RuntimeError(f"Only {len(frames)} price series were available; not enough for a meaningful sector comparison.")
     prices = pd.concat(frames.values(), axis=1).sort_index()
