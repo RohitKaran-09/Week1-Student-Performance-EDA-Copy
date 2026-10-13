@@ -38,11 +38,25 @@ def acquire():
     try:
         with urllib.request.urlopen(req, timeout=60) as resp:
             archive_bytes = resp.read()
+        def find_math_payload(zf):
+            for entry in zf.namelist():
+                if entry.lower().endswith("student-mat.csv"):
+                    return zf.read(entry)
+            # The UCI download can be a ZIP containing the student.zip archive.
+            for entry in zf.namelist():
+                if entry.lower().endswith(".zip"):
+                    try:
+                        with zipfile.ZipFile(BytesIO(zf.read(entry))) as nested:
+                            payload = find_math_payload(nested)
+                            if payload is not None:
+                                return payload
+                    except zipfile.BadZipFile:
+                        continue
+            return None
         with zipfile.ZipFile(BytesIO(archive_bytes)) as z:
-            name = next((n for n in z.namelist() if n.lower().endswith("student-mat.csv")), None)
-            if not name:
-                raise RuntimeError("student-mat.csv not found in UCI archive")
-            raw_bytes = z.read(name)
+            raw_bytes = find_math_payload(z)
+        if raw_bytes is None:
+            raise RuntimeError("student-mat.csv not found, including nested ZIP files")
         df = pd.read_csv(BytesIO(raw_bytes), sep=";")
         if df.empty or "G3" not in df:
             raise RuntimeError("Downloaded dataset failed validation")
