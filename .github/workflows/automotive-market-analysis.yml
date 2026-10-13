@@ -1,0 +1,65 @@
+name: Build Automotive Stock Market Analysis Report
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Week1-Automotive-Stock-Market-Analysis/**'
+      - '.github/workflows/automotive-market-analysis.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: automotive-market-analysis-task1
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build-report:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install analysis dependencies
+        run: python -m pip install --upgrade pip && pip install -r Week1-Automotive-Stock-Market-Analysis/requirements.txt
+      - name: Download public price data and generate report
+        working-directory: Week1-Automotive-Stock-Market-Analysis
+        run: python automotive_market_analysis.py
+      - name: Upload report, charts and results
+        uses: actions/upload-artifact@v4
+        with:
+          name: automotive-market-analysis-task1
+          path: |
+            Week1-Automotive-Stock-Market-Analysis/Automotive_Market_Overview_and_Trend_Analysis_Report.docx
+            Week1-Automotive-Stock-Market-Analysis/Submission_Description.docx
+            Week1-Automotive-Stock-Market-Analysis/visualizations/
+            Week1-Automotive-Stock-Market-Analysis/outputs/
+          if-no-files-found: error
+      - name: Publish generated deliverables to the latest main branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p /tmp/automotive-generated/visualizations /tmp/automotive-generated/outputs
+          cp Week1-Automotive-Stock-Market-Analysis/Automotive_Market_Overview_and_Trend_Analysis_Report.docx /tmp/automotive-generated/
+          cp Week1-Automotive-Stock-Market-Analysis/Submission_Description.docx /tmp/automotive-generated/
+          cp -a Week1-Automotive-Stock-Market-Analysis/visualizations/. /tmp/automotive-generated/visualizations/
+          cp -a Week1-Automotive-Stock-Market-Analysis/outputs/. /tmp/automotive-generated/outputs/
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/automotive-generated/Automotive_Market_Overview_and_Trend_Analysis_Report.docx Week1-Automotive-Stock-Market-Analysis/
+          cp /tmp/automotive-generated/Submission_Description.docx Week1-Automotive-Stock-Market-Analysis/
+          cp -a /tmp/automotive-generated/visualizations/. Week1-Automotive-Stock-Market-Analysis/visualizations/
+          cp -a /tmp/automotive-generated/outputs/. Week1-Automotive-Stock-Market-Analysis/outputs/
+          git add Week1-Automotive-Stock-Market-Analysis/Automotive_Market_Overview_and_Trend_Analysis_Report.docx Week1-Automotive-Stock-Market-Analysis/Submission_Description.docx Week1-Automotive-Stock-Market-Analysis/visualizations Week1-Automotive-Stock-Market-Analysis/outputs
+          if git diff --cached --quiet; then
+            echo "Generated files already match main."
+          else
+            git commit -m "Publish automotive market overview report and charts"
+            git push origin HEAD:main
+          fi
