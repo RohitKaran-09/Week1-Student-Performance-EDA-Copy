@@ -331,7 +331,7 @@ def build_report(prices,daily,drawdowns,metrics,returns,paths,source_info):
     doc.add_paragraph(
       f"This report reviews the Indian automotive equity sector using daily historical price data downloaded on {generated}. "
       f"The market-data analysis includes Nifty 50 and an equal-weighted auto-stock sample basket built from {count_equities} listed manufacturers/component businesses where sufficient data were available. Yahoo Finance returned only one usable ^CNXAUTO observation during this run, so the official Nifty Auto index was not used for historical-return calculations. "
-      f"The most recent common price observation in the downloaded data is {latest}. Over the one-year measured window, Nifty Auto returned {pct(one_y_auto)} versus {pct(one_y_nifty)} for Nifty 50; over the available five-year window, the respective returns were {pct(five_y_auto)} and {pct(five_y_nifty)}. "
+      f"The most recent common price observation in the downloaded data is {latest}. Over the one-year measured window, the Auto sample basket returned {pct(one_y_auto)} versus {pct(one_y_nifty)} for Nifty 50; over the available five-year window, the respective returns were {pct(five_y_auto)} and {pct(five_y_nifty)}. The basket is a descriptive equal-weighted proxy, not the official Nifty Auto index. "
       f"Among included individual shares, the highest observed one-year return was {best_name} ({pct(best_val)}), and the lowest was {worst_name} ({pct(worst_val)}). These are historical, sample-dependent outcomes, not forecasts or recommendations."
     )
     doc.add_paragraph(
