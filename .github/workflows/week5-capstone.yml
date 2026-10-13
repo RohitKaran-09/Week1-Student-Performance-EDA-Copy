@@ -1,0 +1,55 @@
+name: Build Week 5 Comprehensive Data Science Capstone
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Week5-Comprehensive-Data-Science-Project/**'
+      - '.github/workflows/week5-capstone.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: week5-data-science-capstone
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-capstone:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install capstone dependencies
+        run: python -m pip install --upgrade pip && pip install -r Week5-Comprehensive-Data-Science-Project/requirements.txt
+      - name: Generate integrated analysis and capstone report
+        working-directory: Week5-Comprehensive-Data-Science-Project
+        run: python week5_capstone.py
+      - name: Upload generated deliverables
+        uses: actions/upload-artifact@v4
+        with:
+          name: week5-comprehensive-data-science-capstone
+          path: |
+            Week5-Comprehensive-Data-Science-Project/Week5_Comprehensive_Data_Science_Capstone_Report.docx
+            Week5-Comprehensive-Data-Science-Project/Submission_Description.docx
+            Week5-Comprehensive-Data-Science-Project/visualizations/
+            Week5-Comprehensive-Data-Science-Project/outputs/
+          if-no-files-found: error
+      - name: Commit capstone report, visualizations and outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Week5-Comprehensive-Data-Science-Project/Week5_Comprehensive_Data_Science_Capstone_Report.docx Week5-Comprehensive-Data-Science-Project/Submission_Description.docx Week5-Comprehensive-Data-Science-Project/visualizations Week5-Comprehensive-Data-Science-Project/outputs
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+          else
+            git commit -m "Add Week 5 comprehensive data science capstone report"
+            git pull --rebase origin main
+            git push
+          fi
