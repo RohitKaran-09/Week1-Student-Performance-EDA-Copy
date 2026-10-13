@@ -1,0 +1,129 @@
+{
+  "n_students_analyzed": 395,
+  "raw_final_grade_mean": 10.415189873417722,
+  "raw_final_grade_median": 11.0,
+  "primary_hypothesis": {
+    "h0": "mu_no_failures <= mu_one_or_more_failures",
+    "h1": "mu_no_failures > mu_one_or_more_failures",
+    "alpha": 0.05,
+    "test": "One-sided Welch independent-samples t-test",
+    "no_failure_group": {
+      "n": 312,
+      "mean": 11.253205128205128,
+      "sd": 4.169633291328349,
+      "median": 11.0,
+      "q1": 9.75,
+      "q3": 14.0,
+      "threshold_rate_pct": 75.0
+    },
+    "prior_failure_group": {
+      "n": 83,
+      "mean": 7.265060240963855,
+      "sd": 4.711388220019807,
+      "median": 8.0,
+      "q1": 4.5,
+      "q3": 10.0,
+      "threshold_rate_pct": 37.34939759036144
+    },
+    "mean_difference_no_fail_minus_prior_fail": 3.9881448872412726,
+    "standard_error_difference": 0.5684714090906501,
+    "welch_t": 7.015559311278065,
+    "welch_degrees_freedom": 118.37658171019172,
+    "p_value_one_sided": 7.656692963842125e-11,
+    "ci95_difference_two_sided": [
+      2.862453828479209,
+      5.113835946003336
+    ],
+    "hedges_g": 0.9282246064292026,
+    "interpretation_at_005": "Reject H0 in favor of H1"
+  },
+  "sensitivity_mann_whitney": {
+    "u_statistic": 19359.5,
+    "p_value_one_sided": 1.6510986203137972e-12,
+    "interpretation_at_005": "Evidence supports higher grades in the no-failure group"
+  },
+  "secondary_chi_square": {
+    "table_rows": [
+      "No previous failures",
+      "One or more previous failures"
+    ],
+    "table_columns": [
+      "Below 10/20",
+      "At or above 10/20"
+    ],
+    "observed": [
+      [
+        78,
+        234
+      ],
+      [
+        52,
+        31
+      ]
+    ],
+    "expected": [
+      [
+        102.68354430379746,
+        209.31645569620252
+      ],
+      [
+        27.31645569620253,
+        55.68354430379747
+      ]
+    ],
+    "chi_square": 42.09053193907707,
+    "degrees_freedom": 1,
+    "p_value": 8.714409608894218e-11,
+    "cramers_v": 0.32643270165000965,
+    "interpretation_at_005": "Evidence of association"
+  },
+  "exploratory_kruskal_wallis_studytime": {
+    "h_statistic": 7.578856181381842,
+    "degrees_freedom": 3,
+    "p_value": 0.055566544434365706,
+    "interpretation_at_005": "Insufficient evidence of different grade distributions"
+  },
+  "failure_group_threshold_rates": {
+    "No previous failures": {
+      "n": 312,
+      "passed": 234,
+      "rate_pct": 75.0
+    },
+    "One or more previous failures": {
+      "n": 83,
+      "passed": 31,
+      "rate_pct": 37.34939759036145
+    }
+  },
+  "studytime_summary": {
+    "1": {
+      "n": 105,
+      "mean": 10.047619047619047,
+      "sd": 4.9563109582650595,
+      "median": 10.0
+    },
+    "2": {
+      "n": 198,
+      "mean": 10.171717171717171,
+      "sd": 4.217537482591475,
+      "median": 11.0
+    },
+    "3": {
+      "n": 65,
+      "mean": 11.4,
+      "sd": 4.63950428386482,
+      "median": 12.0
+    },
+    "4": {
+      "n": 27,
+      "mean": 11.25925925925926,
+      "sd": 5.281262906894325,
+      "median": 12.0
+    }
+  },
+  "assumption_notes": {
+    "welch": "Independent student records are assumed; Welch's test does not require equal variances. Grade discreteness and skew are reviewed with distribution and Q-Q plots.",
+    "chi_square": "Observed counts are shown; expected cell counts are checked in the JSON output. Independence of rows is assumed.",
+    "multiple_testing": "The prior-failure Welch test is pre-specified primary; secondary tests are supportive or exploratory and are not treated as additional confirmatory hypotheses."
+  }
+}

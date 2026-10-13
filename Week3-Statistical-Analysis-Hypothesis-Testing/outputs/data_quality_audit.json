@@ -1,0 +1,18 @@
+{
+  "rows_before_cleaning": 395,
+  "duplicate_rows_removed": 0,
+  "missing_cells_in_required_analysis_fields": 0,
+  "rows_removed_for_missing_required_fields": 0,
+  "invalid_values_by_field": {
+    "studytime": 0,
+    "failures": 0,
+    "absences": 0,
+    "G1": 0,
+    "G2": 0,
+    "G3": 0
+  },
+  "rows_removed_for_invalid_ranges": 0,
+  "rows_after_cleaning": 395,
+  "synthetic_fallback_used": false,
+  "cleaning_note": "No outcome grades were imputed. Rows missing required test variables or with invalid ranges were excluded and counted."
+}

@@ -1,0 +1,18 @@
+{
+  "dataset": "UCI Student Performance \u2014 Mathematics",
+  "source": "Existing official UCI Mathematics CSV from the Week 1 project",
+  "source_url": "https://archive.ics.uci.edu/static/public/320/student+performance.zip",
+  "dataset_page": "https://archive.ics.uci.edu/dataset/320/student%2Bperformance",
+  "doi": "https://doi.org/10.24432/C5TG7T",
+  "records_analyzed": 395,
+  "synthetic_fallback_used": false,
+  "report": "Week3_Statistical_Analysis_Hypothesis_Testing_Report.docx",
+  "visualizations": [
+    "01_grade_distribution_by_failure_history.png",
+    "02_mean_grade_comparison_ci.png",
+    "03_threshold_attainment_by_failure_history.png",
+    "04_qq_diagnostics.png",
+    "05_grade_by_study_time.png",
+    "06_test_evidence_comparison.png"
+  ]
+}
