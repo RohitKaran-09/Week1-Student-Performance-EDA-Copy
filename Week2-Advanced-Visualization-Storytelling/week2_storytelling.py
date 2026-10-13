@@ -303,7 +303,6 @@ def build_report(df, audit, metrics, paths, source):
     doc.add_paragraph(f"DOI: {DOI}. Acquisition: {source}. The report uses the official Mathematics course CSV (student-mat.csv), not the Portuguese-language course file.")
     doc.add_paragraph(f"Initial source file: {audit['rows_before']} records. Records after duplicate removal and validation: {audit['rows_after']}. Duplicate rows removed: {audit['duplicates_removed']}; invalid rows excluded from charts: {audit['invalid_rows_removed']}. Synthetic data used: No.")
     doc.add_paragraph("The pipeline checks required grade/study/absence fields, converts numeric columns safely, removes exact duplicate rows, and validates plausible ranges before visualizing. It does not impute final grades because that would invent outcome data. Any records excluded for missing required values or invalid ranges are counted in the run metadata/audit.")
-    doc.add_page_break()
     doc.add_heading("4. Visualization Design and Findings", 1)
     doc.add_paragraph("Each figure is presented with its key finding and a rationale for the chosen visual form. The chart sequence moves from overall distribution to relationships, group comparisons, and a combined correlation summary.")
     captions = [
@@ -335,7 +334,7 @@ def build_report(df, audit, metrics, paths, source):
         "G1 and G2 are earlier grades from the same course. They are informative for retrospective description but may create target leakage in a prediction model if their timing is not handled correctly.",
         "Small categories and outliers can affect the reliability of means and rates; sample sizes and uncertainty should be considered."
     ]:
-        doc.add_paragraph(item, style="List Number")
+        doc.add_paragraph(item, style="List Bullet")
     doc.add_heading("7. Reproducibility and Files", 1)
     doc.add_paragraph("Run python week2_storytelling.py after installing requirements.txt. The script writes seven figures under visualizations/, computed metrics and audit information under outputs/, this Word report, and a separate Word version of the submission description. The dataset is acquired from the official UCI archive or the checked Week 1 source file.")
     doc.add_heading("8. Conclusion", 1)
