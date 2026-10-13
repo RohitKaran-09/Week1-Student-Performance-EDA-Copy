@@ -40,6 +40,10 @@ jobs:
             Week1-Automotive-Stock-Market-Analysis/Submission_Description.docx
             Week1-Automotive-Stock-Market-Analysis/visualizations/
             Week1-Automotive-Stock-Market-Analysis/outputs/
+            Week1-Automotive-Stock-Market-Analysis/automotive_market_analysis.py
+            Week1-Automotive-Stock-Market-Analysis/README.md
+            Week1-Automotive-Stock-Market-Analysis/requirements.txt
+            Week1-Automotive-Stock-Market-Analysis/submission_description.txt
           if-no-files-found: error
       - name: Publish generated deliverables to the latest main branch
         run: |
