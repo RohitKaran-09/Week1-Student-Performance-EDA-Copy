@@ -79,8 +79,6 @@ SOURCES = [
 
 def download_market_data():
     """Download a bundle, then individual tickers if the bundle request is sparse."""
-    start = pd.Timestamp.now(tz="UTC").normalize() - pd.DateOffset(years=5)
-    end = pd.Timestamp.now(tz="UTC").normalize() + pd.Timedelta(days=1)
     raw = yf.download(list(TICKERS), period=START_PERIOD, interval="1d",
                       auto_adjust=False, group_by="ticker", progress=False,
                       threads=True, timeout=45)
@@ -122,17 +120,19 @@ def download_market_data():
         if not df.empty:
             df.index = pd.to_datetime(df.index).tz_localize(None)
             df = df[~df.index.duplicated(keep="last")].sort_index()
-            df = df.loc[(df.index >= start.tz_localize(None)) & (df.index < end.tz_localize(None))]
             if "Close" in df:
                 close = pd.to_numeric(df["Close"], errors="coerce")
                 adj = pd.to_numeric(df["Adj Close"], errors="coerce") if "Adj Close" in df else close.copy()
                 # Adjusted close is used for equities to incorporate distribution/split adjustment.
                 chosen = close if ticker.startswith("^") else adj.fillna(close)
                 chosen = chosen.dropna()
+                diagnostics[ticker]["n_price_values_after_cleaning"] = int(len(chosen))
+                diagnostics[ticker]["price_window_start"] = chosen.index.min().strftime("%Y-%m-%d") if len(chosen) else None
+                diagnostics[ticker]["price_window_end"] = chosen.index.max().strftime("%Y-%m-%d") if len(chosen) else None
                 if len(chosen) >= 100:
                     frames[ticker] = chosen.rename(TICKERS[ticker][0])
     if "^CNXAUTO" not in frames or "^NSEI" not in frames:
-        raise RuntimeError("Core index data could not be downloaded (Nifty Auto or Nifty 50). Diagnostics: " + json.dumps(diagnostics, default=str) + ". No synthetic prices were used.")
+        raise RuntimeError("Core index data could not be downloaded (Nifty Auto or Nifty 50). Available series: " + json.dumps({"frames": list(frames), "diagnostics": diagnostics}, default=str) + ". No synthetic prices were used.")
     if len(frames) < 6:
         raise RuntimeError(f"Only {len(frames)} price series were available; not enough for a meaningful sector comparison.")
     prices = pd.concat(frames.values(), axis=1).sort_index()
