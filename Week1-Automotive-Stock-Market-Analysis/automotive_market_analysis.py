@@ -131,14 +131,19 @@ def download_market_data():
                 diagnostics[ticker]["price_window_end"] = chosen.index.max().strftime("%Y-%m-%d") if len(chosen) else None
                 if len(chosen) >= 100:
                     frames[ticker] = chosen.rename(TICKERS[ticker][0])
-    if "^CNXAUTO" not in frames or "^NSEI" not in frames:
-        raise RuntimeError("Core index data could not be downloaded (Nifty Auto or Nifty 50). Available series: " + json.dumps({"frames": list(frames), "diagnostics": diagnostics}, default=str) + ". No synthetic prices were used.")
-    if len(frames) < 6:
-        raise RuntimeError(f"Only {len(frames)} price series were available; not enough for a meaningful sector comparison.")
+    if "^NSEI" not in frames:
+        raise RuntimeError("Nifty 50 benchmark data could not be downloaded. Available series: " + json.dumps({"frames": list(frames), "diagnostics": diagnostics}, default=str) + ". No synthetic prices were used.")
+    stock_cols = [TICKERS[t][0] for t in TICKERS if t not in ("^CNXAUTO", "^NSEI") and TICKERS[t][0] in [s.name for s in frames.values()]]
+    if len(stock_cols) < 6:
+        raise RuntimeError(f"Only {len(stock_cols)} individual automotive stocks were available; not enough for a meaningful sample basket.")
     prices = pd.concat(frames.values(), axis=1).sort_index()
     prices = prices[~prices.index.duplicated(keep="last")]
-    # First observed price series point is not carried backwards; later holes are not filled for returns.
     prices = prices.dropna(how="all")
+    # Yahoo returned only a single usable observation for ^CNXAUTO during this run.
+    # Build a transparent equal-weighted proxy from daily returns of the actual downloaded automotive stocks.
+    stock_returns = prices[stock_cols].pct_change(fill_method=None)
+    basket_returns = stock_returns.mean(axis=1, skipna=True)
+    prices["Auto sample basket"] = (1 + basket_returns.fillna(0)).cumprod() * 100
     return prices, frames
 
 def build_metrics(prices):
@@ -162,8 +167,8 @@ def build_metrics(prices):
     max_dd = drawdowns.min()
     metrics = pd.DataFrame({
         "Name": [next((v[0] for k,v in TICKERS.items() if v[0]==c),c) for c in prices.columns],
-        "Ticker": [next((k for k,v in TICKERS.items() if v[0]==c),c) for c in prices.columns],
-        "Category": [next((v[1] for k,v in TICKERS.items() if v[0]==c),"Unknown") for c in prices.columns],
+        "Ticker": ["Derived, not tradable" if c=="Auto sample basket" else next((k for k,v in TICKERS.items() if v[0]==c),c) for c in prices.columns],
+        "Category": ["Equal-weighted sample proxy" if c=="Auto sample basket" else next((v[1] for k,v in TICKERS.items() if v[0]==c),"Unknown") for c in prices.columns],
         "Latest close": prices.iloc[-1].values,
         "Latest observation": [prices[c].last_valid_index().strftime("%Y-%m-%d") if prices[c].last_valid_index() is not None else "n/a" for c in prices.columns],
         "5Y available-period total return": total_returns.values,
@@ -183,7 +188,7 @@ def make_charts(prices, daily, drawdowns, metrics, period_returns):
     paths = []
     # 1 benchmarks normalized
     fig, ax = plt.subplots(figsize=(9,5.4))
-    benchmark_cols = [c for c in ["Nifty Auto","Nifty 50"] if c in prices]
+    benchmark_cols = [c for c in ["Auto sample basket","Nifty 50"] if c in prices]
     norm = prices[benchmark_cols].dropna(how="all")
     if len(norm):
         norm = norm.div(norm.bfill().iloc[0]).mul(100)
@@ -193,7 +198,7 @@ def make_charts(prices, daily, drawdowns, metrics, period_returns):
     fig.text(.01,.005,"Caption: Index levels are rebased to 100 to compare relative price movement, not absolute index values. The final series end on the latest available observations.",fontsize=8)
     fig.tight_layout(rect=[0,.06,1,1]); p=CHARTS/"01_sector_vs_broad_market.png";fig.savefig(p,dpi=170);plt.close(fig);paths.append(p)
     # 2 company returns at 1Y / 5Y
-    subset=metrics.loc[~metrics.index.isin(["Nifty Auto","Nifty 50"])].copy()
+    subset=metrics.loc[~metrics.index.isin(["Nifty Auto","Nifty 50","Auto sample basket"])].copy()
     cols=[c for c in ["1Y return","5Y return"] if c in subset]
     fig,ax=plt.subplots(figsize=(10,6.5))
     if cols:
@@ -218,10 +223,10 @@ def make_charts(prices, daily, drawdowns, metrics, period_returns):
     fig.tight_layout(rect=[0,.06,1,1]);p=CHARTS/"03_risk_return_map.png";fig.savefig(p,dpi=170);plt.close(fig);paths.append(p)
     # 4 drawdown indexes
     fig,ax=plt.subplots(figsize=(9,5.4))
-    for c in ["Nifty Auto","Nifty 50"]:
+    for c in ["Auto sample basket","Nifty 50"]:
         if c in drawdowns: ax.plot(drawdowns.index,drawdowns[c],label=c)
     ax.axhline(0,color="gray",linewidth=1)
-    ax.set(title="4. Peak-to-Trough Drawdowns: Nifty Auto vs Nifty 50",ylabel="Drawdown from prior running peak",xlabel="Date")
+    ax.set(title="4. Peak-to-Trough Drawdowns: Auto Sample Basket vs Nifty 50",ylabel="Drawdown from prior running peak",xlabel="Date")
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x,_:f"{x:.0%}"));ax.legend()
     fig.text(.01,.005,"Caption: Drawdown is the percentage decline from the previous running maximum. It shows historical downside paths, not maximum possible future losses.",fontsize=8)
     fig.tight_layout(rect=[0,.06,1,1]);p=CHARTS/"04_benchmark_drawdowns.png";fig.savefig(p,dpi=170);plt.close(fig);paths.append(p)
@@ -234,7 +239,7 @@ def make_charts(prices, daily, drawdowns, metrics, period_returns):
     fig.text(.01,.005,"Caption: Pairwise correlations use overlapping daily returns when at least 80 observations are available. Correlation describes co-movement and does not establish a common cause.",fontsize=8)
     fig.tight_layout(rect=[0,.04,1,1]);p=CHARTS/"05_daily_return_correlation.png";fig.savefig(p,dpi=160);plt.close(fig);paths.append(p)
     # 6 monthly returns of Nifty auto
-    sector=prices.get("Nifty Auto")
+    sector=prices.get("Auto sample basket")
     if sector is not None:
         monthly=sector.resample("ME").last().pct_change().dropna()
         by_year=monthly.to_frame("Monthly return");by_year["Year"]=by_year.index.year;by_year["Month"]=by_year.index.strftime("%b")
@@ -248,7 +253,7 @@ def make_charts(prices, daily, drawdowns, metrics, period_returns):
         fig.tight_layout(rect=[0,.06,1,1]);p=CHARTS/"06_sector_monthly_return_heatmap.png";fig.savefig(p,dpi=160);plt.close(fig);paths.append(p)
     # Save a direct recent trend chart
     fig,ax=plt.subplots(figsize=(9,5.4))
-    cols=[c for c in ["Nifty Auto","Nifty 50"] if c in prices]
+    cols=[c for c in ["Auto sample basket","Nifty 50"] if c in prices]
     normalized=prices[cols].div(prices[cols].dropna().iloc[0]).mul(100)
     recent=normalized.loc[normalized.index>=normalized.index.max()-pd.DateOffset(years=1)]
     for c in recent: ax.plot(recent.index,recent[c],label=c)
@@ -309,7 +314,7 @@ def build_report(prices,daily,drawdowns,metrics,returns,paths,source_info):
     generated=datetime.now().astimezone().strftime("%d %B %Y")
     latest=prices.index.max().strftime("%d %B %Y")
     # results summary
-    sector=metrics.loc["Nifty Auto"] if "Nifty Auto" in metrics.index else metrics.iloc[0]
+    sector=metrics.loc["Auto sample basket"] if "Auto sample basket" in metrics.index else metrics.iloc[0]
     nifty=metrics.loc["Nifty 50"] if "Nifty 50" in metrics.index else metrics.iloc[1]
     one_y_auto=sector.get("1Y return",np.nan);one_y_nifty=nifty.get("1Y return",np.nan)
     five_y_auto=sector.get("5Y return",np.nan);five_y_nifty=nifty.get("5Y return",np.nan)
@@ -322,7 +327,7 @@ def build_report(prices,daily,drawdowns,metrics,returns,paths,source_info):
     doc.add_heading("Executive Summary",1)
     doc.add_paragraph(
       f"This report reviews the Indian automotive equity sector using daily historical price data downloaded on {generated}. "
-      f"The market-data analysis includes the Nifty Auto sector index, Nifty 50 and {count_equities} listed manufacturers/component businesses where sufficient data were available. "
+      f"The market-data analysis includes Nifty 50 and an equal-weighted auto-stock sample basket built from {count_equities} listed manufacturers/component businesses where sufficient data were available. Yahoo Finance returned only one usable ^CNXAUTO observation during this run, so the official Nifty Auto index was not used for historical-return calculations. "
       f"The most recent common price observation in the downloaded data is {latest}. Over the one-year measured window, Nifty Auto returned {pct(one_y_auto)} versus {pct(one_y_nifty)} for Nifty 50; over the available five-year window, the respective returns were {pct(five_y_auto)} and {pct(five_y_nifty)}. "
       f"Among included individual shares, the highest observed one-year return was {best_name} ({pct(best_val)}), and the lowest was {worst_name} ({pct(worst_val)}). These are historical, sample-dependent outcomes, not forecasts or recommendations."
     )
@@ -346,7 +351,7 @@ def build_report(prices,daily,drawdowns,metrics,returns,paths,source_info):
     doc.add_paragraph("Returns are computed as P_end/P_start − 1. Daily volatility is the sample standard deviation of daily percentage returns multiplied by sqrt(252). Maximum drawdown is the minimum of P_t / max(P_0 ... P_t) − 1. The annualized return shown for risk-return comparisons compounds the observed period return to an annual rate based on calendar days and must be read cautiously when history is less than five years. Daily return correlations use overlapping observations. The code does not fill missing prices backwards or synthesize prices.")
     doc.add_paragraph("Limitations: public data providers can revise adjusted histories, have occasional gaps, or change symbol availability. The five-year period is rolling and ends at the latest price observation available at run time, not necessarily the current calendar day. Individual-stock prices are affected by corporate actions and idiosyncratic news. Index price levels are not total-return indices. Conclusions therefore emphasize relative context, risk, and drivers rather than precise investable total-return estimates.")
     doc.add_heading("3. Historical Market Performance",1)
-    doc.add_paragraph(f"For the sector benchmark, the downloaded Nifty Auto one-year return is {pct(one_y_auto)} and its available five-year return is {pct(five_y_auto)}; the corresponding Nifty 50 figures are {pct(one_y_nifty)} and {pct(five_y_nifty)}. The difference between sector and broad-market performance provides a first check on whether auto-specific earnings, valuation, product cycles and demand were rewarded differently from the wider market during the selected period.")
+    doc.add_paragraph(f"The sample-basket return is computed from equal-weighted daily returns of the included automotive companies, not copied from an official index. It helps illustrate the collective behavior of the selected sample relative to Nifty 50 but can differ from a free-float market-cap-weighted index.")
     doc.add_paragraph(f"In the individual-stock sample, {best_name} led the one-year table at {pct(best_val)}, while {worst_name} was lowest at {pct(worst_val)}. That range illustrates why treating 'auto stocks' as one uniform trade is misleading. A two-wheeler exporter, a domestic SUV manufacturer, a commercial-vehicle producer and a component maker have distinct revenue mixes, margin drivers and valuation expectations.")
     doc.add_paragraph("Return ranking is a starting point, not an investment conclusion. A high historical return may be accompanied by a higher valuation, greater drawdown or elevated expectations; a low return may reflect structural problems, temporary conditions, or a valuation reset. Fundamental context is needed to distinguish those cases.")
     doc.add_heading("4. Industry Conditions and Demand Drivers",1)
